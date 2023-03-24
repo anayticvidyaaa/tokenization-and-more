@@ -1,0 +1,366 @@
+Preprocessing using Spacy
+
+import spacy
+nlp=spacy.load('en_core_web_sm')
+type(nlp)
+doc1=nlp('
+doc1
+Tokenization
+for token in doc1:
+    print(token)
+len(doc1)
+
+# Count of tokens
+
+t_count=0
+for token in doc1:
+    t_count=t_count+1
+    print(token)
+print('\n\n The total no of tokens:',t_count)
+Stop words
+from spacy.lang.en.stop_words import STOP_WORDS
+print(STOP_WORDS)
+len(STOP_WORDS)
+
+
+Is it a stop ?
+# Count of non-stop words
+
+s_count=0
+for token in doc1:
+    print(token,'==>',token.is_stop)
+print('\n\n The non-stop words:')
+for token in doc1:
+    if token.is_stop==False:
+        s_count=s_count+1
+        print(token)
+print('\n The count of non-stop tokens:',s_count)
+
+Is it a punctuation ?
+# Count of non-punctuation tokens
+
+p_count=0
+for token in doc1:
+    print(token,'==>',token.is_punct)
+print('\n\n The non-punctutation tokens:')
+for token in doc1:
+    if token.is_punct==False:
+        p_count=p_count+1
+        print(token)
+print('\n The count of non-punctuation tokens:',p_count)
+
+# Count of punctuation tokens
+
+p_count=0
+for token in doc1:
+    print(token,'==>',token.is_punct)
+print('\n\n The non-punctutation tokens:')
+for token in doc1:
+    if token.is_punct==True:
+        p_count=p_count+1
+        print(token)
+print('\n The count of non-punctuation tokens:',p_count)
+
+is it a left punctuation ?
+# Count of punctuation tokens
+
+lp_count=0
+for token in doc1:
+    print(token,'==>',token.is_left_punct)
+print('\n\n The left punctutation tokens:')
+for token in doc1:
+    if token.is_left_punct==True:
+        lp_count=lp_count+1
+        print(token)
+print('\n The count of left -punctuation tokens:',lp_count)
+
+Is it a rigth punctuation?
+# Count of right punctuation tokens
+
+rp_count=0
+for token in doc1:
+    print(token,'==>',token.is_right_punct)
+print('\n\n The right punctutation tokens:')
+for token in doc1:
+    if token.is_right_punct==True:
+        rp_count=rp_count+1
+        print(token)
+print('\n The count of right -punctuation tokens:',rp_count)
+
+is it an alphabet?
+# Count of alphabets - tokens
+
+a_count=0
+for token in doc1:
+    print(token,'==>',token.is_alpha)
+print('\n\n The alphabet-tokens:')
+for token in doc1:
+    if token.is_alpha==True:
+        a_count=a_count+1
+        print(token)
+print('\n The count of alphabet-tokens:',a_count)
+
+is it a digit?
+# Count of digit tokens
+
+d_count=0
+for token in doc1:
+    print(token,'==>',token.is_digit)
+print('\n\n The digit tokens:')
+for token in doc1:
+    if token.is_digit==True:
+        d_count=d_count+1
+        print(token)
+print('\n The count of digit tokens:',d_count)
+
+doc2=nlp('100000 is a big number')
+for token in doc2:
+    print(token,'==>',token.is_digit)
+    
+ 
+ Is it upper case?
+# Count of upper case tokens
+
+u_count=0
+for token in doc1:
+    print(token,'==>',token.is_upper)
+print('\n\n The upper case tokens:')
+for token in doc1:
+    if token.is_upper==True:
+        u_count=u_count+1
+        print(token)
+print('\n The count of upper case tokens:',u_count)
+
+
+Is it title case?
+# Count of title case tokens
+
+t_count=0
+for token in doc1:
+    print(token,'==>',token.is_title)
+print('\n\n The title case tokens:')
+for token in doc1:
+    if token.is_title==True:
+        t_count=t_count+1
+        print(token)
+print('\n The count of title case tokens:',t_count)
+
+
+is it a bracket?
+# Count of bracket tokens
+
+b_count=0
+for token in doc1:
+    print(token,'==>',token.is_bracket)
+print('\n\n The bracket tokens:')
+for token in doc1:
+    if token.is_bracket==True:
+        b_count=b_count+1
+        print(token)
+print('\n The count of bracket tokens:',b_count)
+
+
+is it a quote ?
+# Count of quote tokens
+
+q_count=0
+for token in doc1:
+    print(token,'==>',token.is_quote)
+print('\n\n The quote tokens:')
+for token in doc1:
+    if token.is_quote==True:
+        q_count=q_count+1
+        print(token)
+print('\n The count of quote tokens:',q_count)
+
+
+is it like a number?
+# Count of number tokens
+
+n_count=0
+for token in doc1:
+    print(token,'==>',token.like_num)
+print('\n\n The num tokens:')
+for token in doc1:
+    if token.like_num==True:
+        n_count=n_count+1
+        print(token)
+print('\n The count of number tokens:',n_count)
+
+
+is it like a url?
+doc4=nlp(' The website of Times of India is www.indiatimes.com.')
+
+for token in doc4:
+    print(token, '==>', token.like_url)
+    
+
+Is it like an email ID?
+doc5=nlp('My email ID is abc1234@nmims.edu.in.')
+for token in doc5:
+    print(token.text,'==>',token.like_email)
+    
+ 
+ doc5=nlp('My email id is abc1234@nmims.edu.in.')
+for token in doc5:
+    print(token,'==>',token.like_email)
+    
+ Parts of Speech - POS
+doc2
+for token in doc2:
+    print(token, '==>', token.pos_)
+ 
+ Converting into a Df
+spacy.explain('AUX')
+spacy.explain('ADJ')
+cols=['Token','POS', 'Explain_POS','TAG','Explain_TAG']
+cols
+rows=[]
+for token in doc1:
+    row=token,token.pos_,spacy.explain(token.pos_),token.tag_,spacy.explain(token.tag_)
+    rows.append(row)
+rows
+
+
+import pandas as pd
+
+token_df=pd.DataFrame(rows,columns=cols)
+token_df
+
+# Count of each POS
+
+token_df['POS'].value_counts()
+
+
+
+Spacy Pipeline
+
+import spacy
+nlp=spacy.load('en_core_web_sm')
+doc_1=nlp('')
+type(doc_1)
+
+Tokenizer
+for token in doc_1:
+    print(token)
+    
+Stream of strings as input
+When there is a stream of strings as input, we need to
+
+use nlp.pipe() instead of nlp().
+
+List of strings
+text_2=['Today is Monday','Tomorrow is Tuesday',
+       'Yesterday was a holiday']
+type(text_2)
+
+text_2[0]
+'Today is Monday'
+
+for sentence in nlp.pipe(text_2):
+    print(sentence)
+    
+ # Tokens
+
+for sentence in nlp.pipe(text_2):
+    print(sentence)
+    for token in sentence:
+        print(token)
+ Tuple of strings
+text_3=('Today is Monday','Tomorrow is Tuesday',
+       'Yesterday was Sundaya,a holiday')
+type(text_3)
+
+for sent in nlp.pipe(text_3):
+    print(sent)
+    for token in sent:
+        print(token)
+        
+ List of tuples
+ 
+text_4=[('Today is Monday'),('Tomorrow is Tuesday'),
+       ('Yesterday was Sundaya,a holiday')]
+type(text_4)
+
+sent_count=0
+for sent in nlp.pipe(text_4):
+    sent_count=sent_count+1
+    print(sent_count,'=>',sent)
+    for token in sent:
+        print(token)
+        
+ A DataFrame
+
+text_2
+
+import pandas as pd
+text_df=pd.DataFrame(text_2,columns=['Sentence'])
+text_df
+
+text_df['Sentence']
+
+for sent in nlp.pipe(text_df['Sentence']):
+    print(sent)
+    for token in sent:
+        print(token)
+        
+Separating doc into sentences
+for sent in doc_1.sents:
+    print(sent)
+    
+Tagger
+for token in doc_1:
+    print(token.text,'==>',token.tag_)
+    
+spacy.explain('NNS')
+
+for token in doc_1:
+    print(token.text,'==>',token.tag)
+
+POS
+for token in doc_1:
+    print(token.text,'==>',token.pos_)
+    
+for token in doc_1:
+    print(token.text,'==>',token.pos)
+    
+POS count
+pos_count=doc_1.count_by(spacy.attrs.POS)
+pos_count
+
+for x,y in sorted(pos_count.items()):
+    print(x,doc_1.vocab[x].text,y)
+    
+Visualisation of POS
+from spacy import displacy
+displacy.render(doc_1,style='dep') # Dependence
+
+options={'compact':'True','color':'blue'}
+
+displacy.render(doc_1,style='dep',options=options)
+
+COnverting a text into a DF with tokens, pos
+text_df
+
+token=[]
+for sent in nlp.pipe(text_df['Sentence']):
+    if sent.has_annotation('DEP'):
+        token.append([word.text for word in sent] )
+token
+
+token=[]
+pos=[]
+for sent in nlp.pipe(text_df['Sentence']):
+    if sent.has_annotation('DEP'):
+        token.append([word.text for word in sent] )
+        pos.append([word.pos_ for word in sent])
+print(token)
+print(pos)
+
+# Updating text_df
+
+text_df['Token']=token
+text_df['POS']=pos
+text_df
+
+
