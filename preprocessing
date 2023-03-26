@@ -1,0 +1,105 @@
+## Multiple Linear Regression
+
+### Accessing the data
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+ipl=pd.read_csv('https://raw.githubusercontent.com/Foridur3210/IPL-Dataset-Player-price-prediction/master/IPL%20IMB381IPL2013.csv')
+
+ipl
+
+ipl.info()
+
+## Data Preprocessing
+
+ipl.iloc[0:10,0:15]
+
+ipl.iloc[0:10,15:]
+
+#Target
+
+y = ipl['SOLD PRICE']
+y
+
+#Features
+
+x = ipl.drop(['SOLD PRICE'],axis=1)
+x
+
+#Drop irrelevant features
+
+x_1=x.drop(['Sl.NO.','PLAYER NAME','TEAM'],axis=1)
+
+x_1.head()
+
+x['AGE'].unique()
+
+x['COUNTRY'].unique()
+
+x['PLAYING ROLE'].unique()
+
+x['CAPTAINCY EXP'].unique()
+
+#Convert categorical to numeric using 1-hot encoding
+
+x_1=pd.get_dummies(x_1,columns=['AGE','COUNTRY','PLAYING ROLE','CAPTAINCY EXP'])
+
+x_1
+
+x_1.iloc[0:10,0:15]
+
+x_1.iloc[0:10,0:15]
+
+import statsmodels.api as sm
+x_1 =sm.add_constant(x_1)
+
+x_1
+
+x_1.shape()
+
+## Splitting data to test and train
+
+from sklearn.model_selection import train_test_split
+x_train_1,x_test_1,y_train_1,y_test_1=train_test_split(
+x_1,y,test_size=0.2,random_state=10)
+
+
+
+
+
+## Building the model
+
+mlr_1=sm.OLS(y_train_1,x_train_1)
+
+mlr_1=mlr_1.fit()
+
+mlr_1.params
+
+## Diagonosing the model
+
+mlr_1.summary2()
+
+Note 
+only ODI_WKTS and BASE PRICE are relevant features.
+
+## Multicollinearity
+
+from statsmodels.stats.outliers_influence import variance_inflation_factor
+
+def var_inf_factor(data):
+    vif=pd.DataFrame()
+    vif['Feature']=data.columns
+    vif['VIF_value']=[variance_inflation_factor(data.values,i)for i in range(data.shape[1])]
+    print(vif)
+
+var_inf_factor(x_1)
+
+plt.figure(figsize=(25,25))
+sns.heatmap(x_1.corr(),annot=True)
+
+Noted:  
+    T-RUNS <==> ODI-RUNS
+    T_WKTS <==> ODI-WKTS
