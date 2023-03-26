@@ -103,3 +103,6 @@ sns.heatmap(x_1.corr(),annot=True)
 Noted:  
     T-RUNS <==> ODI-RUNS
     T_WKTS <==> ODI-WKTS
+
+
+https://colab.research.google.com/drive/1NrvIj2ibs4gSl2l2AT-GHc4Jao1ett5k?usp=sharing
