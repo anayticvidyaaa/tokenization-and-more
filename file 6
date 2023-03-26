@@ -1,0 +1,126 @@
+# Mall customer segmentation
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+## Accessing the dataset
+
+customer=pd.read_csv('Mall_customers.csv')
+
+customer
+
+## Preprocessing
+
+customer=customer.drop(['CustomerID'],axis=1)
+customer
+
+# Convereting categorical to numeric
+
+cust=pd.get_dummies(customer)
+cust
+
+# Standardisation of features
+
+from sklearn.preprocessing import StandardScaler
+
+sc=StandardScaler()
+
+X=sc.fit_transform(cust)
+X
+
+# COnverting to DF
+
+X=pd.DataFrame(X, columns=cust.columns)
+X
+
+## Dimnensionality reduction using TSNE
+
+from sklearn.manifold import TSNE
+
+tsne=TSNE(n_components=2,random_state=100)
+type(tsne)
+
+X_tsne=tsne.fit_transform(X)
+X_tsne
+
+# Visualisation
+plt.scatter(X_tsne[:,0],X_tsne[:,1]);
+
+### Findings:
+
+1. Formation of clearly defined clusters.
+
+2. There can be 2 clusters.
+
+## Clustering using GMM
+
+from sklearn.mixture import GaussianMixture
+n_comps=np.arange(1,20,1)
+aic_score=[]
+bic_score=[]
+for n in n_comps:
+    model=GaussianMixture(n_components=n,
+                          random_state=10,
+                        n_init=5)
+    model.fit(X)
+    aic_score.append(model.aic(X))
+    bic_score.append(model.bic(X))
+
+print(aic_score)
+
+print(bic_score)
+
+# Plotting
+plt.plot(n_comps,aic_score,c='b',label='AIC')
+plt.plot(n_comps,bic_score,c='g',label='BIC')
+plt.legend();
+
+### Findings:
+
+No of clusters =2
+
+## Building GM model with 2 clusters
+
+gm=GaussianMixture(n_components=2,random_state=100,n_init=5)
+
+gm.fit(X)
+
+pred=gm.predict(X)
+pred
+
+gm.means_
+
+gm.covariances_
+
+gm.weights_
+
+### Adding Label column to the DF
+
+customer['Label']=pred
+
+customer
+
+## Insights:
+
+customer['Label'].value_counts()
+
+customer['Label'].value_counts()/sum(customer['Label'].value_counts())
+
+customer[customer['Gender']=='Male']
+
+customer[customer['Gender']=='Male'][customer['Label']==0]
+
+1. All Males form a market segment, constituting 44% of the customer base. 
+
+customer[customer['Gender']=='Female'][customer['Label']==0]
+
+customer[customer['Gender']=='Female'][customer['Label']==1]
+
+2. All female customers form a segment, constituting 56 % of the customer base.
+
+# Forming samples
+
+gm.sample(10000)
+
