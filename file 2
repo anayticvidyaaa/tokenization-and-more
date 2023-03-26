@@ -1,4 +1,9 @@
-# Linear Discriminant Analysis
+## Linear Discriminant Analysis Steps
+
+1. Compute mean vector of each class
+2. Compute scatter matrices for in between and within classes
+3. Solve matrix[Sw^-1.SB] to get eigen values and eigen vectors
+4. Sort the eigen values in decreasing order and choose k eigen vectors with the highest eigen values. Create W by taking those eigen vectors as columns
 
 import pandas as pd
 import numpy as np
@@ -10,14 +15,17 @@ wine=pd.read_csv('https://gist.githubusercontent.com/tijptjik/9408623/raw/b237fa
 
 wine
 
-# Seperation inot features and target
+# Separation inot features and target
 
 X=wine.drop(['Wine'],axis=1)
+
 X
 
 X.shape
 
 y=wine['Wine']
+y
+
 y.shape
 
 ## Standardisation of features
@@ -34,7 +42,7 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 y.unique()
 
 # n_components <= min(n_classes-1, n_features)
-#              <= min(3-1, 13)
+# n_components <= min(3-1, 13)
 #               = 2, the dim of the hyperplane onto which we want to project
 
 lda=LinearDiscriminantAnalysis(n_components=2)
@@ -49,7 +57,7 @@ X_lda
 
 plt.scatter(X_lda[:,0],X_lda[:,1],c=y);
 
-# Locally Linear Embedding
+## Locally Linear Embedding
 
 from sklearn.datasets import make_swiss_roll
 
@@ -58,7 +66,7 @@ X
 
 y
 
-plt.scatter(X[:,0],X[:,1],c=y);
+plt.scatter(X[:,0],X[:,1],c=y)
 
 ## Building the model
 
@@ -75,4 +83,12 @@ X_lle
 
 plt.scatter(X_lle[:,0],X_lle[:,1],c=y);
 
-# Try the wine data with LLE
+# Exercise
+Try LLE with Wine Dataset
+
+X_scaled,y=make_swiss_roll(n_samples=1000, random_state=100)
+X_scaled
+
+y
+
+
