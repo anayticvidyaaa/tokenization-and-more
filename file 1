@@ -1,0 +1,107 @@
+# PCA
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+wine=pd.read_csv('https://gist.githubusercontent.com/tijptjik/9408623/raw/b237fa5848349a14a14e5d4107dc7897c21951f5/wine.csv')
+
+wine
+
+## Preprocessing
+
+y=wine['Wine']
+y
+
+# Features
+X=wine.drop(['Wine'],axis=1)
+X
+
+X.shape
+
+## Standardisation
+
+from sklearn.preprocessing import StandardScaler
+sc=StandardScaler()
+X_scaled=sc.fit_transform(X)
+X_scaled
+
+## Construction of covariance marix
+
+cm=np.cov(X_scaled.T)
+cm
+
+cm.shape
+
+## Finding eigen value, eigen vector
+
+eig_val,eig_vec=np.linalg.eig(cm)
+eig_val
+
+eig_vec
+
+## Sorting eigen values
+
+sorted_eig_val=[i for i in sorted(eig_val, reverse=True)]
+sorted_eig_val
+
+## Choosing the dimension =2
+
+tot=sum(sorted_eig_val)
+tot
+
+exp_var=[(i/tot) for i in sorted_eig_val]
+exp_var
+
+cum_exp_var=np.cumsum(exp_var)
+cum_exp_var
+
+## Plotting
+
+plt.bar(range(1,14), exp_var,label='Explained Variance')
+plt.xlabel('Principal Component')
+plt.ylabel(' Explained Variance')
+plt.legend();
+
+## Construction of projection matrix
+
+eigen_pair=[(np.abs(eig_val[i]),eig_vec[:,i]) for i in range(len(eig_val))]
+eigen_pair
+
+# Taking only 2 dimension
+
+w=np.hstack((eigen_pair[0][1][:,np.newaxis],
+            eigen_pair[1][1][:,np.newaxis]))
+
+w
+
+w.shape
+
+## Transforming 13 dim data to 2 dim
+
+X_scaled.shape
+
+w.shape
+
+new_X=X_scaled.dot(w)
+new_X
+
+new_X.shape
+
+## Visualising the projected data
+
+for l in np.unique(y):
+    plt.scatter(new_X[y==1,0], new_X[y==1,1],marker='s')
+    plt.scatter(new_X[y==2,0], new_X[y==2,1],marker='x')
+    plt.scatter(new_X[y==3,0], new_X[y==3,1],marker='o')
+
+## Using Sklearn
+
+from sklearn.decomposition import PCA
+pca=PCA(n_components=0.95)
+X_pca=pca.fit_transform(X_scaled)
+
+pca.components_.T[:,1]
+
+pca.explained_variance_ratio_
+
