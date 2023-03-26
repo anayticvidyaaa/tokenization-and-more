@@ -1,0 +1,135 @@
+# TSNE
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.datasets import fetch_openml
+
+### Accessing the data
+
+X,y = fetch_openml('mnist_784',version = 1, return_X_y = True)
+
+X.shape
+
+y.shape
+
+X.head()
+
+X.iloc[1]
+
+y.value_counts()
+
+### Plotting the images
+
+plt.imshow(X.iloc[1].to_numpy().reshape(28,28),'Greys')
+plt.title(y[1]);
+
+plt.imshow(X.iloc[4].to_numpy().reshape(28,28),'Greys')
+plt.title(y[4]);
+
+plt.imshow(X.iloc[100].to_numpy().reshape(28,28),'Greys')
+plt.title(y[100]);
+
+plt.imshow(X.iloc[500].to_numpy().reshape(28,28),'Greys')
+plt.title(y[500]);
+
+plt.imshow(X.iloc[1500].to_numpy().reshape(28,28),'Greys')
+plt.title(y[1500]);
+
+plt.imshow(X.iloc[25000].to_numpy().reshape(28,28),'Greys')
+plt.title(y[25000]);
+
+### Create a random sample of 1K from 70K
+
+np.random.seed(100)
+sample = np.random.choice(X.shape[0],1000)
+print(sample)
+
+### Creating a subest of 1K samples of X,y
+
+X1 = X.iloc[sample,:]
+X1.shape
+
+X1.head()
+
+y1 = y[sample]
+y1.shape
+
+y1.head()
+
+### Building the TSNE model
+
+from sklearn.manifold import TSNE
+
+tsne = TSNE(n_components = 2, perplexity = 30)
+
+X_tsne = tsne.fit_transform(X1)
+X_tsne.shape
+
+X_tsne[0]
+
+### Plotting transformed data points
+
+plt.scatter(X_tsne[:,0],X_tsne[:,1]);
+
+plt.scatter(X_tsne[:,0],X_tsne[:,1],c = y1.astype(float));
+
+### Creating a dataframe
+
+X_df = pd.DataFrame({'X0':X_tsne[:,0],
+                    'X1':X_tsne[:,1],
+                    'Label':y1})
+X_df
+
+plt.figure(figsize=(15,12))
+sns.lmplot(data = X_df, x = 'X0', y = 'X1', 
+           hue = 'Label');
+
+plt.figure(figsize=(15,12))
+sns.lmplot(data = X_df, x = 'X0', y = 'X1', 
+           hue = 'Label',fit_reg = False);
+
+## Exercise:
+
+Perform tsne on wine dataset
+
+wine = pd.read_csv('https://gist.githubusercontent.com/tijptjik/9408623/raw/b237fa5848349a14a14e5d4107dc7897c21951f5/wine.csv')
+
+wine
+
+x = wine.drop(['Wine'],axis = 1)
+x
+
+y = wine['Wine']
+y
+
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+x_scaled = sc.fit_transform(x)
+x_scaled
+
+tsne = TSNE(n_components = 2, perplexity = 30)
+
+x_tsne = tsne.fit_transform(x_scaled)
+x_tsne.shape
+
+x_tsne[0]
+
+plt.scatter(x_tsne[:,0],x_tsne[:,1]);
+
+plt.scatter(x_tsne[:,0],x_tsne[:,1],c = y.astype(float));
+
+x_df = pd.DataFrame({'X0':x_tsne[:,0],
+                    'X1':x_tsne[:,1],
+                    'Label':y})
+x_df
+
+plt.figure(figsize=(15,12))
+sns.lmplot(data = x_df, x = 'X0', y = 'X1', 
+           hue = 'Label');
+
+plt.figure(figsize=(15,12))
+sns.lmplot(data = x_df, x = 'X0', y = 'X1', 
+           hue = 'Label',fit_reg = False);
+
