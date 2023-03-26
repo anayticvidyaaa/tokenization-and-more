@@ -1,0 +1,133 @@
+## Clustering using Gaussian Mixture Models
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Creating samples
+np.random.seed(100)
+
+X1=np.random.normal(loc=25,scale=6,size=2000)
+sns.distplot(X1,color='red',kde='True');
+
+X2=np.random.normal(loc=45,scale=4,size=2000)
+sns.distplot(X2,color='blue',kde='True');
+
+X3=np.random.normal(loc=65,scale=7,size=2000)
+sns.distplot(X3,color='green',kde='True');
+
+X4=np.random.normal(loc=85,scale=3,size=2000)
+sns.distplot(X4,color='yellow',kde='True');
+
+## Merging 
+
+X=np.hstack((X1,X2,X3,X4))
+
+sns.distplot(X,kde='True');
+
+sns.distplot(X,kde=True,hist=False);
+
+#X is a Gaussain Model
+
+## Building a GMM model with 4 clusters
+
+from sklearn.mixture import GaussianMixture
+
+gmm=GaussianMixture(n_components=4,n_init=10)
+
+#Training
+gmm.fit(X.reshape(-1,1))
+
+# Prediction
+pred=gmm.predict(X.reshape(-1,1))
+pred
+
+np.unique(pred)
+
+gmm.means_
+
+gmm.covariances_
+
+np.bincount(pred)
+
+gmm.weights_
+
+## Finding number of clusters
+
+n_components=np.arange(1,11)
+aic_scores=[]
+bic_scores=[]
+for n in n_components:
+    model=GaussianMixture(n,n_init=10)
+    model.fit(X.reshape(-1,1))
+    aic_score=model.aic(X.reshape(-1,1))
+    bic_score=model.bic(X.reshape(-1,1))
+    aic_scores.append(aic_score)
+    bic_scores.append(bic_score)
+
+plt.plot(n_components,aic_scores,label='AIC')
+plt.plot(n_components,bic_scores,label='BIC')
+plt.legend();
+
+## Number of clusters=4
+
+#  Generating samples
+
+gmm.sample(100000)
+
+## Building GMM for the dataset
+
+data=pd.read_csv('gmm-data.csv')
+
+data
+
+sns.pairplot(data);
+
+## Finding no of clusters
+
+n_components=np.arange(1,11)
+aic_scores=[]
+bic_scores=[]
+for n in n_components:
+    model=GaussianMixture(n,n_init=10)
+    model.fit(data)
+    aic_score=model.aic(data)
+    bic_score=model.bic(data)
+    aic_scores.append(aic_score)
+    bic_scores.append(bic_score)
+
+plt.plot(n_components,aic_scores,label='AIC')
+plt.plot(n_components,bic_scores,label='BIC')
+plt.legend();
+
+## No of clusters=4
+
+# Model Building
+
+gmm_data = GaussianMixture(n_components=4,n_init=10)
+gmm_data.fit(data)
+
+data_pred=gmm_data.predict(data)
+data_pred
+
+gmm_data.means_
+
+gmm_data.weights_
+
+## Adding Cluster labels to DF
+
+data['Label']=data_pred
+
+data
+
+data['Label'].value_counts()
+
+### Visualise the clusters
+
+sns.pairplot(data,hue='Label')
+
+Exercise:
+
+Perform GMM on market segmentation dataset.
+
