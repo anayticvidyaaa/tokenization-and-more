@@ -1,0 +1,84 @@
+# Hierarchical Clustering
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+## Accessing the dataset
+
+cust=pd.read_csv('wholesale_customers.csv')
+
+cust
+
+cust.shape
+
+## Standardisation of features
+
+from sklearn.preprocessing import StandardScaler
+sc=StandardScaler()
+X=sc.fit_transform(cust)
+X
+
+# Converting into DF
+
+X=pd.DataFrame(X,columns=cust.columns)
+X
+
+## Drawing Dendrogram
+
+import scipy.cluster.hierarchy as sch
+
+dendro=sch.dendrogram(sch.linkage(X,method='ward'))
+
+plt.figure(figsize=(15,12))
+dendro=sch.dendrogram(sch.linkage(X,method='ward'))
+plt.axhline(y=35,color='red',linestyle='--');
+
+plt.figure(figsize=(15,12))
+dendro=sch.dendrogram(sch.linkage(X,method='ward'))
+plt.axhline(y=35,color='red',linestyle='--');
+plt.axhline(y=9,color='blue',linestyle='-.');
+
+plt.figure(figsize=(15,12))
+dendro=sch.dendrogram(sch.linkage(X,method='ward'))
+plt.axhline(y=35,color='red',linestyle='--');
+plt.axhline(y=25,color='blue',linestyle='-.');
+
+## Agglomerative Clustering using Sklearn
+
+from sklearn.cluster import AgglomerativeClustering
+
+clust=AgglomerativeClustering(n_clusters=2,linkage='ward')
+
+type(clust)
+
+clust.fit_predict(X)
+
+clust.labels_
+
+## Adding labels to the DF
+
+X['Label']=pd.Series(clust.labels_)
+
+X
+
+
+## Analysing the customer segments
+
+# No of customers in each segment
+
+X['Label'].value_counts()
+
+# Listing all custmers belong to the segment '0'
+X[X['Label']==0]
+
+X[X['Label']==1]
+
+# Buying pattern of Milk and Grocery
+
+sns.scatterplot(x=X['Milk'],y=X['Grocery'],hue=X['Label']);
+
+plt.figure(figsize=(15,12))
+sns.pairplot(data=X,hue='Label');
+
